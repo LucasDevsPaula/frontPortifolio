@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import api from "../server/api";
+import api from "../server/api"; 
 
 interface User {
   id: string;
@@ -8,6 +8,9 @@ interface User {
 }
 
 interface LoginResponse {
+  id: string;
+  nome: string;
+  email: string;
   token: string;
 }
 
@@ -16,7 +19,6 @@ interface AuthContextData {
   signed: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-
   loginWithGoogle: (token: string) => Promise<void>;
   logout: () => void;
 }
@@ -32,38 +34,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function loadUser() {
       const token = localStorage.getItem("token");
+
       if (!token) {
         setLoading(false);
         return;
       }
 
       try {
+        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
         const res = await api.get<User>("/me");
         setUser(res.data);
-      } catch {
+      } catch (err) {
+        console.log("Token inválido ou expirado", err);
         logout();
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     loadUser();
   }, []);
 
   async function login(email: string, senha: string) {
-    const res = await api.post<LoginResponse>("/session", { email, senha });
-    console.log("Resposta do login: ", res.data);
+    try {
+      const res = await api.post<LoginResponse>("/session", { email, senha });
 
-    localStorage.setItem("token", res.data.token);
+      const { token } = res.data;
 
-    const profile = await api.get<User>("/me");
-    setUser(profile.data);
+      localStorage.setItem("token", token);
+
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      const profile = await api.get<User>("/me");
+      setUser(profile.data);
+    } catch (err) {
+      console.error("Erro ao fazer login:", err);
+      throw err; 
+    }
   }
 
   async function loginWithGoogle(token: string) {
-    console.log("Login Google: recebendo token", token);
-    localStorage.setItem("token", token);
-    api.defaults.headers.Authorization = `Bearer ${token}`;
-
     try {
+      console.log("Login Google: recebendo token", token);
+
+      localStorage.setItem("token", token);
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
       const profile = await api.get<User>("/me");
       setUser(profile.data);
     } catch (err) {
@@ -74,12 +90,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   function logout() {
     localStorage.removeItem("token");
+    api.defaults.headers.common["Authorization"] = undefined; 
     setUser(null);
   }
 
   return (
     <AuthContext.Provider
-      value={{ user, signed: !!user, loading, login ,loginWithGoogle, logout }}
+      value={{ user, signed: !!user, loading, login, loginWithGoogle, logout }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,21 +1,22 @@
 import logoImg from "../../assets/logo.jpeg";
 import { Container } from "../../components/container";
-
 import { Input } from "../../components/input";
+
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
-import { useNavigate, useSearchParams, Link } from "react-router";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const schema = z.object({
   email: z
     .string()
     .email("Insira um email válido")
-    .nonempty("O campo é obrigatório"),
-  senha: z.string().nonempty("O campo senha é obrigatório"),
+    .min(1, "O campo é obrigatório"),
+  senha: z.string().min(1, "O campo senha é obrigatório"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -24,6 +25,7 @@ export function Login() {
   const [params] = useSearchParams();
   const { login, loginWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -36,17 +38,26 @@ export function Login() {
 
   useEffect(() => {
     const token = params.get("token");
-
     if (token) {
-      loginWithGoogle(token);
-      navigate("/dashboard");
+      loginWithGoogle(token).then(() => {
+        toast.success("Login realizado com sucesso!");
+        navigate("/dashboard");
+      });
     }
   }, []);
 
   async function onSubmit(data: FormData) {
-    console.log(data);
-    await login(data.email, data.senha);
-    navigate("/dashboard");
+    setIsLoading(true);
+    try {
+      await login(data.email, data.senha);
+      toast.success("Bem-vindo de volta!");
+      navigate("/dashboard");
+    } catch (error) {
+      console.log(error);
+      toast.error("Email ou senha incorretos.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   function handleGoogleLogin() {
@@ -82,16 +93,21 @@ export function Login() {
               register={register}
             />
           </div>
-
           <button
             type="submit"
-            className="bg-zinc-500 w-full rounded-lg text-white h-10 font-medium cursor-pointer"
+            disabled={isLoading}
+            className="bg-zinc-500 w-full rounded-lg text-white h-10 font-medium cursor-pointer disabled:opacity-50"
           >
-            enviar
+            {isLoading ? "Carregando..." : "Acessar"}
           </button>
+
           <span className="flex justify-center mb-2">Ou</span>
-          <button className="bg-zinc-500 w-2/5 rounded-lg text-white h-10 font-medium cursor-pointer mb-3 flex justify-around items-center mx-auto hover:scale-105 transition-all shadow-[0px_10px_11px_0px_rgba(168,157,157,0.56)]"
-          onClick={handleGoogleLogin}>
+
+          <button
+            className="bg-zinc-500 w-2/5 rounded-lg text-white h-10 font-medium cursor-pointer mb-3 flex justify-around items-center mx-auto hover:scale-105 transition-all shadow-[0px_10px_11px_0px_rgba(168,157,157,0.56)]"
+            type="button"
+            onClick={handleGoogleLogin}
+          >
             <img
               src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
               alt="Logo google"
