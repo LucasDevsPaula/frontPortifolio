@@ -1,7 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { Search, Image as ImageIcon, FileText } from "lucide-react";
-import Skeleton from "react-loading-skeleton";
+import { Search } from "lucide-react";
 import "react-loading-skeleton/dist/skeleton.css";
 
 import { Container } from "../../components/container";
@@ -18,8 +17,7 @@ interface ProjetoProps {
   categoria: string;
   createdAt: string;
   imagemCapa?: string;
-  usuario?: UsuarioProps;
-  ImagemProjeto?: { id: string; url: string }[];
+  usuario: UsuarioProps;
 }
 
 export function Home() {
@@ -30,7 +28,7 @@ export function Home() {
   useEffect(() => {
     async function carregarProjetos() {
       try {
-        const res = await api.get("/project");
+        const res = await api.get("/projects");
 
         let dados = [];
         if (Array.isArray(res.data)) {
@@ -51,7 +49,7 @@ export function Home() {
 
   // --- LÓGICA DE FILTRO INTELIGENTE ---
   const filteredProjects = projetos.filter((p) => {
-    const term = searchTerm.toLowerCase(); 
+    const term = searchTerm.toLowerCase();
 
     const matchTitulo = (p.titulo || "").toLowerCase().includes(term);
 
@@ -69,52 +67,6 @@ export function Home() {
 
   const handleSearchSubmit = (e: FormEvent) => {
     e.preventDefault();
-  };
-
-  const getCapaContent = (projeto: ProjetoProps) => {
-    let url = projeto.imagemCapa;
-
-    if (
-      (!url || url.includes("placeholder")) &&
-      projeto.ImagemProjeto &&
-      projeto.ImagemProjeto.length > 0
-    ) {
-      url = projeto.ImagemProjeto[0].url;
-    }
-
-    if (url && !url.includes("placeholder")) {
-      const fullUrl = url.startsWith("http")
-        ? url
-        : `http://localhost:3333/files/${url}`;
-
-      if (
-        fullUrl.endsWith(".pdf") ||
-        fullUrl.endsWith(".doc") ||
-        fullUrl.endsWith(".docx") ||
-        fullUrl.endsWith(".odt")
-      ) {
-        return (
-          <div className="w-full h-56 bg-gray-200 flex flex-col items-center justify-center text-gray-500 rounded-t-lg">
-            <FileText size={48} />
-            <span className="text-xs mt-2 font-medium">Documento</span>
-          </div>
-        );
-      }
-      return (
-        <img
-          className="w-full rounded-t-lg mb-2 h-56 object-cover hover:scale-102 transition-all"
-          src={fullUrl}
-          alt={projeto.titulo}
-        />
-      );
-    }
-
-    return (
-      <div className="w-full h-56 bg-gray-200 flex flex-col items-center justify-center text-gray-400 rounded-t-lg">
-        <ImageIcon size={48} />
-        <span className="text-xs mt-2">Sem imagem</span>
-      </div>
-    );
   };
 
   return (
@@ -155,7 +107,11 @@ export function Home() {
           filteredProjects.map((projeto) => (
             <Link to={`/project/${projeto.id}`} key={projeto.id}>
               <section className="w-full bg-secundary rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                {getCapaContent(projeto)}
+                <img
+                  className="w-full rounded-t-lg mb-2 h-56 object-cover hover:scale-102 transition-all"
+                  src={`http://localhost:3333/files/${projeto.imagemCapa}`}
+                  alt={projeto.titulo}
+                />
 
                 <p className="font-bold mt-1 mb-2 px-2 text-lg">
                   {projeto.titulo}

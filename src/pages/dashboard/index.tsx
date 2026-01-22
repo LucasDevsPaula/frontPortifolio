@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Button,
-  Card,
-  Badge,
-  TextInput,
-  Pagination,
-  Avatar,
-} from "flowbite-react";
+import { Button, Card, Badge, TextInput, Pagination } from "flowbite-react";
 import {
   Plus,
   Search,
@@ -14,8 +7,7 @@ import {
   Edit3,
   Trash2,
   FolderOpen,
-  FileText,
-  Image as ImageIcon,
+  ImageIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
@@ -25,19 +17,22 @@ import { Container } from "../../components/container";
 import api from "../../server/api";
 import { DeleteProjectModal } from "../../components/delete/DeletarProjeto";
 
-interface Projeto {
+interface UsuarioProps {
+  id: string;
+  nome: string;
+}
+
+interface ProjetoProps {
   id: string;
   titulo: string;
   categoria: string;
-  descricao: string;
-  imagemCapa?: string;
-  createdAt?: string;
-  data?: string;
-  ImagemProjeto?: { id: string; url: string }[];
+  createdAt: string;
+  imagemCapa: string;
+  usuario: UsuarioProps;
 }
 
 export default function Dashboard() {
-  const [projetos, setProjetos] = useState<Projeto[]>([]);
+  const [projetos, setProjetos] = useState<ProjetoProps[]>([]);
   const [loading, setLoading] = useState(true);
 
   // --- ESTADOS DA BUSCA ---
@@ -50,31 +45,22 @@ export default function Dashboard() {
     nome: string;
   } | null>(null);
 
-  async function fetchProjects() {
-    try {
-      setLoading(true);
-      const response = await api.get("/project");
-
-      if (Array.isArray(response.data)) {
-        setProjetos(response.data);
-      } else if (
-        response.data.projetos &&
-        Array.isArray(response.data.projetos)
-      ) {
-        setProjetos(response.data.projetos);
-      } else {
-        setProjetos([]);
-      }
-    } catch (error) {
-      console.error("Erro ao buscar projetos:", error);
-      setProjetos([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    fetchProjects();
+    async function carregarProjetos() {
+      try {
+        const res = await api.get("/project");
+        setProjetos(res.data.projetos);
+        console.log(res.data.projetos);
+        setLoading(true);
+      } catch (err) {
+        console.error("Erro ao buscar projetos:", err);
+        setProjetos([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    carregarProjetos();
   }, []);
 
   // --- LÓGICA DE FILTRAGEM (AQUI QUE A MÁGICA ACONTECE) ---
@@ -112,33 +98,16 @@ export default function Dashboard() {
     }
   };
 
-  const renderPreview = (projeto: Projeto) => {
+  const renderPreview = (projeto: ProjetoProps) => {
     let fileName = null;
 
-    if (projeto.ImagemProjeto && projeto.ImagemProjeto.length > 0) {
-      fileName = projeto.ImagemProjeto[0].url;
-    } else if (projeto.imagemCapa) {
-      fileName = projeto.imagemCapa;
-    }
+    fileName = projeto.imagemCapa;
 
     if (fileName && !fileName.includes("placeholder")) {
       const fullUrl = fileName.startsWith("http")
         ? fileName
         : `http://localhost:3333/files/${fileName}`;
-      const isFile =
-        fullUrl.toLowerCase().endsWith(".pdf") ||
-        fullUrl.toLowerCase().endsWith(".doc") ||
-        fullUrl.toLowerCase().endsWith(".docx") ||
-        fullUrl.toLowerCase().endsWith(".odt");
 
-      if (isFile) {
-        return (
-          <div className="h-full w-full flex flex-col items-center justify-center bg-[#dad7cd]/50 text-[#588157]">
-            <FileText size={48} />
-            <span className="text-xs mt-2 font-medium">Documento Anexado</span>
-          </div>
-        );
-      }
       return (
         <img
           src={fullUrl}
@@ -148,7 +117,7 @@ export default function Dashboard() {
       );
     }
     return (
-      <div className="h-full w-full flex items-center justify-center bg-[#dad7cd]/30 text-[#a3b18a]">
+      <div className="h-full w-full flex items-center justify-center bg-[#dad7cd]/30 text-secundary">
         <ImageIcon size={48} />
       </div>
     );
@@ -168,7 +137,7 @@ export default function Dashboard() {
           </p>
         </div>
         <Link to="/dashboard/new">
-          <Button className="!bg-[#588157] hover:!bg-[#3a5a40] border-none shadow-md font-bold">
+          <Button className="bg-[#588157]! hover:bg-buttons! border-none shadow-md font-bold">
             <Plus className="mr-2 h-5 w-5" /> Adicionar projeto
           </Button>
         </Link>
@@ -217,6 +186,9 @@ export default function Dashboard() {
                     to={`/project/${projeto.id}`}
                     className="hover:text-blue-600 transition-colors"
                   >
+                    <div className="h-40 w-full rounded-md overflow-hidden border border-gray-100 relative mb-4">
+                      {renderPreview(projeto)}
+                    </div>
                     <h5
                       className="text-2xl font-bold tracking-tight text-gray-900 flex items-center gap-2 line-clamp-1"
                       title={projeto.titulo}
@@ -227,16 +199,10 @@ export default function Dashboard() {
                   </Link>
                   <p className="font-normal text-gray-500 flex items-center gap-2 text-xs mt-1">
                     <Calendar size={12} />
-                    {projeto.createdAt || projeto.data
-                      ? new Date(
-                          projeto.createdAt || projeto.data!
-                        ).toLocaleDateString("pt-BR")
+                    {projeto.createdAt
+                      ? new Date(projeto.createdAt).toLocaleDateString("pt-BR")
                       : "Sem data"}
                   </p>
-                </div>
-
-                <div className="h-40 w-full rounded-md overflow-hidden border border-gray-100 relative">
-                  {renderPreview(projeto)}
                 </div>
 
                 <div className="flex gap-2 mt-4 pt-4 border-t border-gray-100">

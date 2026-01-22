@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import api from "../server/api"; 
+import api from "../server/api";
 
 interface User {
   id: string;
@@ -41,8 +41,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
         const res = await api.get<User>("/me");
         setUser(res.data);
       } catch (err) {
@@ -58,18 +56,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function login(email: string, senha: string) {
     try {
       const res = await api.post<LoginResponse>("/session", { email, senha });
+      console.log("Resposta do login: ", res.data);
 
       const { token } = res.data;
 
       localStorage.setItem("token", token);
 
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
       const profile = await api.get<User>("/me");
       setUser(profile.data);
     } catch (err) {
       console.error("Erro ao fazer login:", err);
-      throw err; 
+      throw err;
     }
   }
 
@@ -78,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log("Login Google: recebendo token", token);
 
       localStorage.setItem("token", token);
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      api.defaults.headers.Authorization = `Bearer ${token}`;
 
       const profile = await api.get<User>("/me");
       setUser(profile.data);
@@ -90,7 +87,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   function logout() {
     localStorage.removeItem("token");
-    api.defaults.headers.common["Authorization"] = undefined; 
     setUser(null);
   }
 

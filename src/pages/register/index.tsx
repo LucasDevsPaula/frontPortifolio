@@ -14,12 +14,12 @@ import toast from "react-hot-toast";
 const schema = z.object({
   nome: z
     .string()
-    .min(1, "O campo nome é obrigatório")
+    .nonempty("O campo nome é obrigatório")
     .min(3, "O campo nome deve ter mais de 2 caracteres"),
   email: z
     .string()
     .email("Insira um email válido")
-    .min(1, "O campo é obrigatório"),
+    .nonempty("O campo é obrigatório"),
   senha: z
     .string()
     .min(1, "O campo senha é obrigatório")
@@ -43,6 +43,7 @@ export function Register() {
   });
 
   async function onSubmit(data: FormData) {
+    console.log(data);
     setIsLoading(true);
     try {
       await api.post("/users", {
@@ -92,7 +93,7 @@ export function Register() {
           className="bg-white w-full max-w-xl rounded-lg p-6 shadow-md border border-gray-200"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <h2 className="text-2xl font-bold text-center mb-6 text-[#344e41]">
+          <h2 className="text-2xl font-bold text-center mb-6 text-primary">
             Crie sua conta
           </h2>
 
@@ -127,7 +128,7 @@ export function Register() {
           <button
             type="submit"
             disabled={isLoading}
-            className="bg-[#588157] hover:bg-[#3a5a40] w-full rounded-lg text-white h-10 font-bold cursor-pointer mb-4 transition-colors disabled:opacity-50"
+            className="bg-[#588157] hover:bg-buttons w-full rounded-lg text-white h-10 font-bold cursor-pointer mb-4 transition-colors disabled:opacity-50"
           >
             {isLoading ? "Cadastrando..." : "Cadastrar"}
           </button>
