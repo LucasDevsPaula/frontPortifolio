@@ -24,7 +24,7 @@ interface AuthContextData {
 }
 
 export const AuthContext = createContext<AuthContextData>(
-  {} as AuthContextData
+  {} as AuthContextData,
 );
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -59,6 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log("Resposta do login: ", res.data);
 
       const { token } = res.data;
+      console.log(token)
 
       localStorage.setItem("token", token);
 
@@ -87,6 +88,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   function logout() {
     localStorage.removeItem("token");
+    // Garante que nenhuma requisição futura envie Authorization por padrão
+    api.defaults.headers.Authorization = null;
     setUser(null);
   }
 

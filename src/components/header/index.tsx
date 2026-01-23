@@ -1,14 +1,15 @@
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.jpeg";
 import { CircleUserRound, LogIn, LogOut } from "lucide-react";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export function Header() {
   const navigate = useNavigate();
-  const singed = true;
-  const loginAuth = false;
+  const { signed, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     navigate("/");
   };
 
@@ -18,7 +19,7 @@ export function Header() {
         <Link to={"/"}>
           <img src={Logo} alt="Logo do sistema" className="w-16" />
         </Link>
-        {!loginAuth && singed && (
+        {signed && (
           <div className="flex items-center gap-4">
             <Link to={"/dashboard"}>
               <CircleUserRound />
@@ -32,7 +33,7 @@ export function Header() {
             </button>
           </div>
         )}
-        {!loginAuth && !singed && (
+        {!signed && (
           <Link to={"/login"}>
             <LogIn />
           </Link>
