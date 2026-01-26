@@ -20,7 +20,7 @@ export function TextArea({
   return (
     <div>
       <textarea
-        className="w-full rounded-md px-2"
+        className="w-full rounded-md px-2 bg-inputs placeholder:text-gray-900 border-none outline-none focus:ring-2 focus:ring-detalhes"
         placeholder={placeholder}
         {...register(name, rules)}
         id={name}

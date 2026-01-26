@@ -100,7 +100,7 @@ export function New() {
         const skipped = validFiles.length - toAdd.length;
         if (skipped > 0)
           alert(
-            `Limite de ${MAX_IMAGES} imagens. ${skipped} não foram adicionadas.`
+            `Limite de ${MAX_IMAGES} imagens. ${skipped} não foram adicionadas.`,
           );
       })
       .catch(() => {
@@ -160,7 +160,7 @@ export function New() {
       console.error("Status:", err.response?.status);
       console.error(
         "Data completo:",
-        JSON.stringify(err.response?.data, null, 2)
+        JSON.stringify(err.response?.data, null, 2),
       );
       console.error("Headers:", err.response?.headers);
 
@@ -173,7 +173,7 @@ export function New() {
       toast.error(
         typeof errorMessage === "string"
           ? errorMessage
-          : JSON.stringify(errorMessage)
+          : JSON.stringify(errorMessage),
       );
     } finally {
       setIsSubmitting(false);
@@ -185,7 +185,7 @@ export function New() {
       <div className="flex items-center gap-4 mb-6 mt-4">
         <Link
           to="/dashboard"
-          className="bg-gray-200 p-2 rounded-full hover:bg-gray-300 transition"
+          className="bg-inputs p-2 rounded-full hover:bg-inputsHover transition"
         >
           <ArrowLeft size={20} className="text-zinc-900" />
         </Link>
@@ -196,7 +196,7 @@ export function New() {
         <div className="w-full mb-6 flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div
-              className="w-full h-40 rounded-lg border-2 border-dashed border-zinc-400 bg-gray-50 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors relative overflow-hidden"
+              className="w-full h-40 rounded-lg border-4 border-dashed border-detalhes bg-inputs flex flex-col items-center justify-center cursor-pointer hover:bg-inputsHover transition-colors relative overflow-hidden"
               onClick={() => capaInputRef.current?.click()}
             >
               {imagePreview ? (
@@ -218,8 +218,8 @@ export function New() {
                 </>
               ) : (
                 <>
-                  <Upload className="mb-2 text-zinc-500" size={32} />
-                  <span className="text-zinc-500 text-sm font-medium">
+                  <Upload className="mb-2 text-detalhes" size={32} />
+                  <span className="text-zinc-900 text-2xl font-medium">
                     Imagem de Capa
                   </span>
                 </>
@@ -237,11 +237,11 @@ export function New() {
 
           <div className="flex-1 flex flex-col gap-2">
             <div
-              className="w-full h-40 rounded-lg border-2 border-dashed border-zinc-400 bg-gray-50 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors"
+              className="w-full h-40 rounded-lg border-4 border-dashed border-detalhes bg-inputs flex flex-col items-center justify-center cursor-pointer hover:bg-inputsHover transition-colors"
               onClick={() => galeriaInputRef.current?.click()}
             >
-              <Upload className="mb-2 text-zinc-500" size={32} />
-              <span className="text-zinc-500 text-sm font-medium">
+              <Upload className="mb-2 text-detalhes" size={32} />
+              <span className="text-zinc-900 text-2xl font-medium">
                 Adicionar imagens á galeria
               </span>
               <input
@@ -258,24 +258,24 @@ export function New() {
 
         {/* PREVIEWS */}
         {galeriaPreviews.length > 0 && (
-          <div className="mb-6 p-2 bg-gray-50 rounded-lg border border-gray-200 overflow-x-auto flex gap-4">
+          <div className="mb-6 p-2 bg-inputs rounded-lg border border-detalhes overflow-x-auto flex gap-4">
             {galeriaPreviews.map((item, index) => {
               return (
                 <div
                   key={index}
-                  className="relative w-24 h-24 shrink-0 border rounded-lg bg-white flex items-center justify-center overflow-hidden group"
+                  className="relative w-24 h-24 shrink-0 border-detalhes rounded-lg flex items-center justify-center "
                 >
                   <img
                     src={item}
                     alt={`Imagem ${index + 1}`}
-                    className="absolute inset-0 w-full h-full object-cover rounded-md border"
+                    className=" inset-0 w-full h-full object-cover rounded-md"
                   />
 
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  <div className=" inset-0 flex items-center justify-center">
                     <button
                       type="button"
                       onClick={() => removerItemGaleria(index)}
-                      className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-80 hover:opacity-100 hover:scale-105 transition"
+                      className="absolute -top-2 -right-2 bg-detalhes text-white p-1.5 rounded-full opacity-90 hover:opacity-100 hover:scale-105 transition cursor-pointer"
                     >
                       <X size={12} />
                     </button>
@@ -335,7 +335,7 @@ export function New() {
 
         <Button
           type="submit"
-          className="w-full bg-[#588157]! enabled:hover:bg-buttons! border-none cursor-pointer"
+          className="w-full text-2xl font-medium bg-[#588157]! enabled:hover:bg-buttons! border-none cursor-pointer"
           disabled={isSubmitting}
         >
           {isSubmitting ? "Cadastrando..." : "Cadastrar Projeto"}

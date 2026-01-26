@@ -88,7 +88,7 @@ export function Home() {
             <input
               type="text"
               placeholder="Pesquise por nome, categoria, data ou arquiteto..."
-              className="w-full border-primary rounded-lg h-9 pl-10 pr-3 outline-none focus:ring-2 focus:ring-[#588157] bg-[#D7C19C] placeholder:text-gray-800"
+              className="w-full border-primary rounded-lg h-9 pl-10 pr-3 outline-none focus:ring-2 focus:ring-[#588157] bg-inputs placeholder:text-gray-800"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
