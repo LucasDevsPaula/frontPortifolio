@@ -3,17 +3,11 @@
 
 @theme {
   --color-primary: #344e41;
-  --color-secundary: #a3b18a;
+  --color-secundary: #F2ECE0;
   --color-buttons: #3a5a40;
 }
 body {
   background-color: #dad7cd;
 }
 
-/* paleta de cores
-#dad7cd
-#a3b18a
-#588157
-#3a5a40
-#344e41
-*/
+

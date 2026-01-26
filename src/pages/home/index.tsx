@@ -70,42 +70,47 @@ export function Home() {
   };
 
   return (
-    <Container>
-      <form
-        onSubmit={handleSearchSubmit}
-        className="p-4 rounded-lg w-full mx-auto flex justify-center items-center gap-2 bg-secundary"
-      >
-        <div className="relative w-full flex items-center">
-          <div className="absolute left-3 pointer-events-none">
-            <Search size={20} className="text-gray-500" />
+    <>
+      <div className="relative">
+        <img
+          src="http://localhost:3333/files/36d9fce507e28ee979d8563f0e1b5fcd-ex6.jpeg"
+          alt="Projeto"
+          className="w-full h-[380px] object-cover"
+        />
+        <form
+          onSubmit={handleSearchSubmit}
+          className="absolute left-1/2 -bottom-6 -translate-x-1/2 p-4 rounded-lg w-[90%] mx-auto flex justify-center items-center gap-2 bg-[#dad7cd] shadow-[0px_10px_11px_rgba(168,157,157,0.56)]"
+        >
+          <div className="relative w-full flex items-center">
+            <div className="absolute left-3 pointer-events-none">
+              <Search size={20} className="text-black" />
+            </div>
+            <input
+              type="text"
+              placeholder="Pesquise por nome, categoria, data ou arquiteto..."
+              className="w-full border-primary rounded-lg h-9 pl-10 pr-3 outline-none focus:ring-2 focus:ring-[#588157] bg-[#D7C19C] placeholder:text-gray-800"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-          <input
-            type="text"
-            // MUDANÇA NO PLACEHOLDER PARA AVISAR O USUÁRIO
-            placeholder="Pesquise por nome, categoria, data ou arquiteto..."
-            className="w-full border-primary rounded-lg h-9 pl-10 pr-3 outline-none focus:ring-2 focus:ring-[#588157]"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <button className="bg-buttons h-9 px-8 rounded-lg text-white font-bold text-lg hover:opacity-90 transition-opacity">
-          Buscar
-        </button>
-      </form>
+          <button className="bg-buttons h-9 px-8 rounded-lg text-white font-bold text-lg hover:opacity-90 transition-opacity">
+            Buscar
+          </button>
+        </form>
+      </div>
+      <Container>
+        <h1 className="font-bold text-left mt-12 text-3xl mb-4">Projetos</h1>
 
-      <h1 className="font-bold text-left mt-6 text-3xl mb-4">Projetos</h1>
-
-      <main className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 pb-10">
-        {loading ? (
-          [1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="w-full h-72 bg-gray-200 rounded-lg animate-pulse"
-            ></div>
-          ))
-        ) : filteredProjects.length > 0 ? (
-          filteredProjects.map((projeto) => (
-            <Link to={`/project/${projeto.id}`} key={projeto.id}>
+        <main className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 pb-10">
+          {loading ? (
+            [1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="w-full h-72 bg-gray-200 rounded-lg animate-pulse"
+              ></div>
+            ))
+          ) : filteredProjects.length > 0 ? (
+            filteredProjects.map((projeto) => (
               <section className="w-full bg-secundary rounded-lg shadow-sm hover:shadow-md transition-shadow">
                 <img
                   className="w-full rounded-t-lg mb-2 h-56 object-cover hover:scale-102 transition-all"
@@ -117,7 +122,7 @@ export function Home() {
                   {projeto.titulo}
                 </p>
                 <div className="flex flex-col px-2 pb-4">
-                  <span className="text-zinc-800 mb-2 text-sm">
+                  <span className="text-zinc-800 mb-2 text-base">
                     Data:{" "}
                     {projeto.createdAt
                       ? new Date(projeto.createdAt).toLocaleDateString("pt-BR")
@@ -125,19 +130,26 @@ export function Home() {
                     | Categoria: {projeto.categoria ?? "-"}
                   </span>
 
-                  <strong className="font-medium text-sm text-zinc-600">
-                    Arquiteto(a): {projeto.usuario?.nome || "Não informado"}
-                  </strong>
+                  <div className="flex justify-between items-center">
+                    <div className="bg-[#7D845F] text-secundary px-2 py-0.5 rounded-full hover:scale-102 transition-all">
+                      <Link to={`/project/${projeto.id}`} key={projeto.id}>
+                        Ver detalhes
+                      </Link>
+                    </div>
+                    <strong className="font-medium text-sm text-zinc-600 mr-2">
+                      Arquiteto(a): {projeto.usuario?.nome || "Não informado"}
+                    </strong>
+                  </div>
                 </div>
               </section>
-            </Link>
-          ))
-        ) : (
-          <p className="col-span-full text-center text-gray-500 mt-10">
-            Nenhum projeto encontrado com esse termo.
-          </p>
-        )}
-      </main>
-    </Container>
+            ))
+          ) : (
+            <p className="col-span-full text-center text-gray-500 mt-10">
+              Nenhum projeto encontrado com esse termo.
+            </p>
+          )}
+        </main>
+      </Container>
+    </>
   );
 }

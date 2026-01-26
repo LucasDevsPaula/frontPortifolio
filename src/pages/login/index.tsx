@@ -54,7 +54,7 @@ export function Login() {
       navigate("/dashboard");
     } catch (error) {
       console.log("ERRO: ", error);
-      toast.error("TESTE");
+      toast.error("Email/Senha incorreto!");
     } finally {
       setIsLoading(false);
     }
