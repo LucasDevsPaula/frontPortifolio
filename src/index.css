@@ -4,13 +4,13 @@
 @theme {
   --color-primary: #3F523F;
   --color-secundary: #F2ECE0;
-  --color-buttons: #707C56;
+  --color-buttons: #7D845F;
+  --color-buttonsHover: #707C56;
   --color-inputs: #D2BE99;
   --color-inputsHover: #D2BE94;
   --color-detalhes: #986D55;
+  --color-background: #DAD7CD;
 }
 body {
-  background-color: #dad7cd;
+  background-color: var(--color-background);
 }
-
-

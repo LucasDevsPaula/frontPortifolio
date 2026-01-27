@@ -21,21 +21,21 @@ export function Header() {
         </Link>
         {signed && (
           <div className="flex items-center gap-4">
-            <Link to={"/dashboard"}>
-              <CircleUserRound />
+            <Link to={"/dashboard"} title="Dashboard">
+              <CircleUserRound size={24} color="#D2BE99"/>
             </Link>
             <button
               onClick={handleLogout}
               className="text-zinc-900 hover:text-zinc-950 transition-colors cursor-pointer"
               title="Sair"
             >
-              <LogOut size={24} />
+              <LogOut size={24} color="#D2BE99"/>
             </button>
           </div>
         )}
         {!signed && (
-          <Link to={"/login"}>
-            <LogIn />
+          <Link to={"/login"} title="Entrar">
+            <LogIn size={24} color="#D2BE99"/>
           </Link>
         )}
       </header>

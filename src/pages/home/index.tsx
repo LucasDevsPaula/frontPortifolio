@@ -75,7 +75,7 @@ export function Home() {
         <img
           src="http://localhost:3333/files/36d9fce507e28ee979d8563f0e1b5fcd-ex6.jpeg"
           alt="Projeto"
-          className="w-full h-[380px] object-cover"
+          className="w-full max-h-64 object-cover"
         />
         <form
           onSubmit={handleSearchSubmit}
@@ -93,7 +93,7 @@ export function Home() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <button className="bg-buttons h-9 px-8 rounded-lg text-white font-bold text-lg hover:opacity-90 transition-opacity">
+          <button className="bg-buttons h-9 px-8 rounded-lg text-white font-bold text-lg hover:opacity-90 hover:bg-buttonsHover transition-all cursor-pointer">
             Buscar
           </button>
         </form>
@@ -131,7 +131,7 @@ export function Home() {
                   </span>
 
                   <div className="flex justify-between items-center">
-                    <div className="bg-[#7D845F] text-secundary px-2 py-0.5 rounded-full hover:scale-102 transition-all">
+                    <div className="bg-buttons text-secundary px-2 py-0.5 rounded-full hover:scale-102 transition-all hover:bg-buttonsHover">
                       <Link to={`/project/${projeto.id}`} key={projeto.id}>
                         Ver detalhes
                       </Link>
