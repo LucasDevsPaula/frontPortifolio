@@ -14,3 +14,42 @@
 body {
   background-color: var(--color-background);
 }
+
+@layer components {
+  /* INPUTS */
+  .flowbite-input,
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea {
+    background-color: #F2ECE0;
+    color: #986D55;
+    border-color: #986D55;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #986D55;
+    opacity: 0.7;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: #986D55;
+    --tw-ring-color: #986D55;
+  }
+
+  /* MODAL */
+  .flowbite-modal,
+  [role="dialog"] {
+    background-color: #F2ECE0;
+    color: #986D55;
+  }
+
+  /* MODAL OVERLAY */
+  .flowbite-modal-backdrop {
+    background-color: rgba(242, 236, 224, 0.8);
+    backdrop-filter: blur(4px);
+  }
+}
+

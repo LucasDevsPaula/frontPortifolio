@@ -82,6 +82,24 @@ export default function Detail() {
     }
   };
 
+  const customCardTheme = {
+    root: {
+      base: "flex rounded-2xl shadow-xl border-0",
+      children:
+        "flex h-full flex-col gap-4 p-0 border-none bg-secundary shadow-xl rounded-2xl",
+    },
+  };
+
+  const customModalTheme = {
+    root: { base: "fixed inset-0 z-50 overflow-y-auto overflow-x-hidden" },
+    content: {
+      base: `
+      relative rounded-2xl
+      bg-transparent
+    `,
+    },
+  };
+
   const handleSendContact = (e: FormEvent) => {
     e.preventDefault();
 
@@ -116,50 +134,47 @@ ${mensagem}`;
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] text-gray-800 flex flex-col items-center py-10 px-4">
+    <div className="min-h-screen bg-background flex flex-col items-center py-10 px-4">
       <div className="w-full max-w-5xl">
-        <Link
-          to="/"
-          className="inline-flex items-center text-[#588157] hover:text-primary mb-6 transition-colors font-medium"
-        >
-          <ArrowLeft size={20} className="mr-2" /> Voltar para a Home
-        </Link>
+        <div className="flex items-center gap-4 mb-6 mt-4">
+          <Link
+            to="/"
+            className="bg-secundary p-2 rounded-full hover:bg-inputs transition-all"
+          >
+            <ArrowLeft size={20} className="text-zinc-900" />
+          </Link>
+          <h1 className="text-2xl font-bold">Voltar para a Home</h1>
+        </div>
 
         {loading ? (
           <Skeleton height={400} />
         ) : projeto ? (
-          <Card className="shadow-xl border-none overflow-hidden p-0 bg-white">
-            {projeto.ImagemProjeto && projeto.ImagemProjeto.length > 0 ? (
-              <div className="relative">
-                <Carousel slideInterval={5000} className="h-96">
-                  {projeto.ImagemProjeto?.map((item) => (
-              <div key={item.id} className="relative h-96 w-full">
-                <img
-                  src={`http://localhost:3333/files/${item.url}`}
-                  alt="Imagem do projeto"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent"></div>
-                <div className="absolute bottom-6 left-8 text-white">
-                  <Badge color={getStatusColor(projeto.categoria)} className="mb-3 w-fit px-3 py-1 text-sm">
-                    {projeto.categoria}
-                  </Badge>
-                  <h1 className="text-5xl font-bold drop-shadow-lg">{projeto.titulo}</h1>
-                </div>
-              </div>
-            ))}
-                </Carousel>
-              </div>
-            ) : (
-              <div className="bg-[#dad7cd] h-48 flex items-center justify-center border-b border-gray-200">
-                <div className="text-center">
-                  <h1 className="text-4xl front-bold text-primary">{projeto.titulo}</h1>
-                  <Badge color={getStatusColor(projeto.categoria)} className="mb-3 w-fit px-3 py-1 text-sm">
-                    {projeto.categoria}
-                  </Badge>
-                </div>
-              </div>
-            )}
+          <Card theme={customCardTheme}>
+            <div className="relative p-8">
+              <Carousel slideInterval={5000} className="h-96">
+                {projeto.ImagemProjeto?.map((item) => (
+                  <div key={item.id} className="relative h-96 w-full">
+                    <img
+                      src={`http://localhost:3333/files/${item.url}`}
+                      alt="Imagem do projeto"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent"></div>
+                    <div className="absolute bottom-6 left-8 text-white">
+                      <Badge
+                        color={getStatusColor(projeto.categoria)}
+                        className="mb-3 w-fit px-3 py-1 text-sm"
+                      >
+                        {projeto.categoria}
+                      </Badge>
+                      <h1 className="text-5xl font-bold drop-shadow-lg">
+                        {projeto.titulo}
+                      </h1>
+                    </div>
+                  </div>
+                ))}
+              </Carousel>
+            </div>
 
             <div className="p-8">
               {/* GRID INFO */}
@@ -197,11 +212,11 @@ ${mensagem}`;
 
               {/* ESCOPO */}
               <div className="mb-10">
-                <h3 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
-                  <FileText size={24} className="text-[#588157]" /> Escopo do
+                <h3 className="text-xl font-bold text-detalhes mb-4 flex items-center gap-2">
+                  <FileText size={24} className="text-detalhes" /> Escopo do
                   Projeto
                 </h3>
-                <div className="text-gray-700 leading-relaxed whitespace-pre-line bg-gray-50 p-6 border border-gray-200 rounded-xl">
+                <div className="text-gray-900 leading-relaxed whitespace-pre-line bg-gray-50 p-6 border border-gray-200 rounded-xl">
                   {projeto.descricao || "Sem descrição disponível."}
                 </div>
               </div>
@@ -209,44 +224,25 @@ ${mensagem}`;
               {/* GALERIA */}
               {projeto.ImagemProjeto && projeto.ImagemProjeto.length > 0 && (
                 <div className="mb-12">
-                  <h3 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
-                    <ImageIcon size={24} className="text-[#588157]" /> Arquivos
-                    e Imagens
+                  <h3 className="text-xl font-bold text-detalhes mb-4 flex items-center gap-2">
+                    <ImageIcon size={24} className="text-detalhes" />
+                    Imagens
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {projeto.ImagemProjeto.map((file) => {
-                      const isDoc =
-                        file.url.endsWith(".pdf") ||
-                        file.url.endsWith(".doc") ||
-                        file.url.endsWith(".docx") ||
-                        file.url.endsWith(".odt");
-                      const fileName = file.url.split("/").pop() || "Arquivo";
-
                       return (
                         <a
                           key={file.id}
                           href={`http://localhost:3333/files/${file.url}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group relative h-32 border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-all flex flex-col items-center justify-center bg-white text-center p-2 text-decoration-none"
+                          className="group relative h-32 rounded-xl overflow-hidden hover:shadow-lg transition-all flex flex-col items-center justify-center  text-center p-2 text-decoration-none"
                         >
-                          {isDoc ? (
-                            <>
-                              <FileIcon
-                                size={40}
-                                className="text-[#588157] mb-2"
-                              />
-                              <span className="text-[11px] text-gray-600 line-clamp-2 break-all font-medium px-2">
-                                {fileName}
-                              </span>
-                            </>
-                          ) : (
-                            <img
-                              src={`http://localhost:3333/files/${file.url}`}
-                              alt="Galeria"
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            />
-                          )}
+                          <img
+                            src={`http://localhost:3333/files/${file.url}`}
+                            alt="Galeria"
+                            className="w-full h-full rounded-xl object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
                         </a>
                       );
                     })}
@@ -255,12 +251,12 @@ ${mensagem}`;
               )}
 
               {/* ACTION BAR */}
-              <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-200 gap-4 mt-8 bg-gray-50 p-6 rounded-lg">
+              <div className="flex flex-col md:flex-row justify-between items-center pt-8 gap-4 mt-8 bg-gray-50 p-6 rounded-lg">
                 <div className="text-center md:text-left">
-                  <h4 className="font-bold text-primary text-lg">
+                  <h4 className="font-bold text-zinc-900 text-lg">
                     Interessado neste projeto?
                   </h4>
-                  <p className="text-gray-500 text-sm">
+                  <p className="text-zinc-900 text-sm">
                     Entre em contato diretamente com o responsável.
                   </p>
                 </div>
@@ -268,15 +264,15 @@ ${mensagem}`;
                 <div className="flex gap-3">
                   <Link to={`/dashboard/edit/${projeto.id}`}>
                     <Button
-                      color="gray"
-                      className="border-gray-300 text-gray-700"
+                      // color="gray"
+                      className=" text-white bg-buttons hover:bg-buttonsHover transition-all cursor-pointer"
                     >
                       <Edit3 size={18} className="mr-2" /> Editar
                     </Button>
                   </Link>
 
                   <Button
-                    className="bg-[#588157]! hover:bg-buttons! shadow-md px-4"
+                    className="bg-buttonsHover hover:bg-buttons shadow-md px-4 transition-all cursor-pointer"
                     onClick={() => setOpenContactModal(true)}
                   >
                     <MessageCircle size={18} className="mr-2" /> Falar com
@@ -296,27 +292,28 @@ ${mensagem}`;
         <Modal
           show={openContactModal}
           size="md"
+          theme={customModalTheme}
           onClose={() => setOpenContactModal(false)}
           popup
         >
-          <div className="relative bg-white rounded-lg shadow dark:bg-gray-700 p-6">
+          <div className="relative bg-secundary rounded-lg shadow p-6">
             {/* Botão X para fechar */}
             <button
               type="button"
               onClick={() => setOpenContactModal(false)}
-              className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+              className="absolute top-3 right-2.5 text-detalhes bg-transparent hover:bg-detalhes/30 hover:text-detalhes/40 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
             >
               <X size={20} />
             </button>
 
             <div className="text-center px-2">
-              <div className="mx-auto mb-4 h-14 w-14 text-[#588157] bg-[#dad7cd]/30 p-3 rounded-full flex items-center justify-center">
+              <div className="mx-auto mb-4 h-14 w-14 text-detalhes bg-inputs p-3 rounded-full flex items-center justify-center">
                 <MessageCircle size={28} />
               </div>
-              <h3 className="mb-2 text-xl font-bold text-gray-800">
+              <h3 className="mb-2 text-xl font-bold text-detalhes">
                 Entre em Contato
               </h3>
-              <p className="text-sm text-gray-500 mb-6">
+              <p className="text-sm text-detalhes mb-6">
                 Envie um e-mail para{" "}
                 <b>{projeto?.usuario?.nome || "o responsável"}</b>.
               </p>

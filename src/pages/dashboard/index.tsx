@@ -135,7 +135,7 @@ export default function Dashboard() {
     <>
       <div className="w-full max-h-72 bg-inputs flex flex-col justify-center pl-10">
         <Container>
-          <h1 className="text-5xl font-serif">Bem vindo(a), {user?.nome}</h1>
+          <h1 className="mt-9 text-5xl font-serif">Bem vindo(a), {user?.nome}</h1>
           <p className="mt-2 text-xl font-serif">
             Gerencie seu portifólio de projetos
           </p>
