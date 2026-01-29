@@ -15,7 +15,6 @@ import {
   Calendar,
   User,
   FileText,
-  File as FileIcon,
   Image as ImageIcon,
   MessageCircle,
   Send,
@@ -97,6 +96,33 @@ export default function Detail() {
       relative rounded-2xl
       bg-transparent
     `,
+    },
+  };
+
+  const customLabelTheme = {
+    root: {
+      base: "font-bold",
+      colors: {
+        arquitetura: "text-detalhes",
+      },
+    },
+  };
+
+  const customInputTheme = {
+    field: {
+      input: {
+        colors: {
+          arquitetura:
+            "bg-inputs border-detalhes text-primary focus:border-detalhes focus:ring-detalhes placeholder-detalhes/70",
+        },
+      },
+    },
+  };
+
+  const customTextareaTheme = {
+    colors: {
+      arquitetura:
+        "bg-inputs border-detalhes text-primary focus:border-detalhes focus:ring-detalhes placeholder-detalhes/70",
     },
   };
 
@@ -264,7 +290,6 @@ ${mensagem}`;
                 <div className="flex gap-3">
                   <Link to={`/dashboard/edit/${projeto.id}`}>
                     <Button
-                      // color="gray"
                       className=" text-white bg-buttons hover:bg-buttonsHover transition-all cursor-pointer"
                     >
                       <Edit3 size={18} className="mr-2" /> Editar
@@ -324,13 +349,19 @@ ${mensagem}`;
               >
                 <div>
                   <div className="mb-1 block">
-                    <Label htmlFor="nome" className="text-primary">
+                    <Label
+                      htmlFor="nome"
+                      theme={customLabelTheme}
+                      color="arquitetura"
+                    >
                       Seu Nome
                     </Label>
                   </div>
                   <TextInput
                     id="nome"
                     required
+                    theme={customInputTheme}
+                    color="arquitetura"
                     value={nomeCliente}
                     onChange={(e) => setNomeCliente(e.target.value)}
                     placeholder="Ex: Maria"
@@ -338,7 +369,11 @@ ${mensagem}`;
                 </div>
                 <div>
                   <div className="mb-1 block">
-                    <Label htmlFor="email" className="text-primary">
+                    <Label
+                      htmlFor="email"
+                      theme={customLabelTheme}
+                      color="arquitetura"
+                    >
                       Seu Email
                     </Label>
                   </div>
@@ -347,13 +382,19 @@ ${mensagem}`;
                     type="email"
                     required
                     value={emailCliente}
+                    theme={customInputTheme}
+                    color="arquitetura"
                     onChange={(e) => setEmailCliente(e.target.value)}
                     placeholder="Ex: maria@email.com"
                   />
                 </div>
                 <div>
                   <div className="mb-1 block">
-                    <Label htmlFor="tel" className="text-primary">
+                    <Label
+                      htmlFor="tel"
+                      theme={customLabelTheme}
+                      color="arquitetura"
+                    >
                       Seu Telefone
                     </Label>
                   </div>
@@ -361,13 +402,19 @@ ${mensagem}`;
                     id="tel"
                     required
                     value={telCliente}
+                    theme={customInputTheme}
+                    color="arquitetura"
                     onChange={(e) => setTelCliente(e.target.value)}
                     placeholder="(11) 99999-9999"
                   />
                 </div>
                 <div>
                   <div className="mb-1 block">
-                    <Label htmlFor="msg" className="text-primary">
+                    <Label
+                      htmlFor="msg"
+                      theme={customLabelTheme}
+                      color="arquitetura"
+                    >
                       Mensagem
                     </Label>
                   </div>
@@ -375,6 +422,8 @@ ${mensagem}`;
                     id="msg"
                     required
                     rows={3}
+                    theme={customTextareaTheme}
+                    color="arquitetura"
                     value={mensagem}
                     onChange={(e) => setMensagem(e.target.value)}
                     placeholder="Olá, gostaria de saber mais..."
@@ -384,7 +433,7 @@ ${mensagem}`;
                 <div className="mt-4">
                   <Button
                     type="submit"
-                    className="w-full bg-[#588157]! hover:bg-buttons!"
+                    className="w-full bg-buttons hover:bg-buttonsHover transition-all cursor-pointer"
                   >
                     <Send size={16} className="mr-2" /> Enviar E-mail
                   </Button>
