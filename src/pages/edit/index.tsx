@@ -8,15 +8,7 @@ import {
   HelperText, // Importante estar importado
   Modal,
 } from "flowbite-react";
-import {
-  ArrowLeft,
-  Save,
-  AlertCircle,
-  Trash2,
-  X,
-  FileText,
-  Upload,
-} from "lucide-react";
+import { ArrowLeft, Save, AlertCircle, Trash2, X, Upload } from "lucide-react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
@@ -198,7 +190,7 @@ export default function EditProject() {
       if (imagensParaRemover.length > 0) {
         dataToSend.append(
           "imagensRemoveIds",
-          JSON.stringify(imagensParaRemover)
+          JSON.stringify(imagensParaRemover),
         );
       }
 
@@ -363,7 +355,7 @@ export default function EditProject() {
                     theme={customLabelTheme}
                     color="arquitetura"
                   >
-                    Galeria de Arquivos (Máx 10)
+                    Galeria de Imagens (Máx 10)
                   </Label>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -380,7 +372,7 @@ export default function EditProject() {
                           ref={galeriaInputRef}
                           type="file"
                           className="hidden"
-                          accept="image/*,.pdf,.doc,.docx,.odt"
+                          accept="image/*"
                           multiple
                           onChange={handleImageChange}
                         />
@@ -388,18 +380,6 @@ export default function EditProject() {
                     )}
 
                     {previewUrls.map((item, index) => {
-                      const extension = (item.name || item.url)
-                        .split(".")
-                        .pop()
-                        ?.toLowerCase();
-                      const isDoc = [
-                        "pdf",
-                        "doc",
-                        "docx",
-                        "odt",
-                        "txt",
-                      ].includes(extension || "");
-
                       return (
                         <div
                           key={index}
@@ -411,23 +391,11 @@ export default function EditProject() {
                             rel="noopener noreferrer"
                             className="flex flex-col items-center justify-center w-full h-full text-center p-2 text-decoration-none"
                           >
-                            {isDoc ? (
-                              <>
-                                <FileText
-                                  size={32}
-                                  className="mb-2 text-detalhes"
-                                />
-                                <span className="text-[10px] text-zinc-800 line-clamp-2">
-                                  {item.name}
-                                </span>
-                              </>
-                            ) : (
-                              <img
-                                src={item.url}
-                                alt="Preview"
-                                className="w-full h-full object-cover"
-                              />
-                            )}
+                            <img
+                              src={item.url}
+                              alt="Preview"
+                              className="w-full h-full rounded-xl object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
                           </a>
                           <button
                             type="button"
@@ -435,7 +403,7 @@ export default function EditProject() {
                               e.preventDefault();
                               removeImage(index);
                             }}
-                            className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                            className="absolute top-1 right-1 bg-detalhes hover:bg-[#805C48] text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10 cursor-pointer"
                           >
                             <X size={14} />
                           </button>
@@ -454,7 +422,7 @@ export default function EditProject() {
                 <div className="flex flex-col sm:flex-row gap-3 mt-4 pt-6 border-t border-detalhes/20 items-center justify-between">
                   <Button
                     color="failure"
-                    className="bg-red-600 hover:bg-red-700 transition-all cursor-pointer w-full sm:w-auto"
+                    className="bg-detalhes hover:bg-[#805C48] text-white transition-all cursor-pointer w-full sm:w-auto"
                     onClick={() => setOpenDeleteModal(true)}
                   >
                     <Trash2 size={18} className="mr-2" /> Excluir

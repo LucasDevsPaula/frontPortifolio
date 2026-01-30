@@ -52,7 +52,7 @@ export const DeleteProjectModal = ({
   const customButtonTheme = {
     color: {
       delete:
-        "text-white bg-detalhes hover:bg-[#805C48] transition-all cursor-pointer",
+        "text-white bg-detalhes border-none hover:bg-[#805C48] transition-all cursor-pointer",
       arquitetura:
         "text-white bg-buttons hover:bg-buttonsHover transition-all cursor-pointer",
     },

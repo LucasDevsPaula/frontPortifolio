@@ -262,7 +262,7 @@ ${mensagem}`;
                           href={`http://localhost:3333/files/${file.url}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group relative h-32 rounded-xl overflow-hidden hover:shadow-lg transition-all flex flex-col items-center justify-center  text-center p-2 text-decoration-none"
+                          className="group relative h-32 rounded-xl overflow-hidden hover:shadow-lg transition-all flex flex-col items-center justify-center bg-inputs border border-detalhes/20 text-center p-2 text-decoration-none"
                         >
                           <img
                             src={`http://localhost:3333/files/${file.url}`}
