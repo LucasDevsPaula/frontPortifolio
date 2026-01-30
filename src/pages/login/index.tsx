@@ -50,7 +50,7 @@ export function Login() {
     setIsLoading(true);
     try {
       await login(data.email, data.senha);
-      toast.success("Bem-vindo de volta!");
+      toast.success("Bem-vindo!");
       navigate("/dashboard");
     } catch (error) {
       console.log("ERRO: ", error);
@@ -96,15 +96,19 @@ export function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className="bg-zinc-500 w-full rounded-lg text-white h-10 font-medium cursor-pointer disabled:opacity-50"
+            className="bg-buttons hover:bg-buttonsHover transition-all w-full rounded-lg text-white h-10 font-medium mb-4 cursor-pointer disabled:opacity-50"
           >
             {isLoading ? "Carregando..." : "Acessar"}
           </button>
 
-          <span className="flex justify-center mb-2">Ou</span>
+          <div className="flex items-center justify-between mb-4">
+            <hr className="w-full border-gray-300" />
+            <span className="px-2 text-gray-400 text-sm">Ou</span>
+            <hr className="w-full border-gray-300" />
+          </div>
 
           <button
-            className="bg-zinc-500 w-2/5 rounded-lg text-white h-10 font-medium cursor-pointer mb-3 flex justify-around items-center mx-auto hover:scale-105 transition-all shadow-[0px_10px_11px_0px_rgba(168,157,157,0.56)]"
+            className="w-full border border-gray-300 rounded-lg h-10 font-medium cursor-pointer flex justify-center items-center gap-2 hover:bg-gray-50 transition-all text-gray-700"
             type="button"
             onClick={handleGoogleLogin}
           >
@@ -113,10 +117,18 @@ export function Login() {
               alt="Logo google"
               className="w-5 h-5"
             />
-            <span>Log in with Google</span>
+            <span>Entrar com Google</span>
           </button>
         </form>
-        <Link to={"/register"}>Não possui uma conta? Cadastre-se.</Link>
+       <p className="text-gray-600">
+          Não possui uma conta?{" "}
+          <Link
+            to={"/login"}
+            className="text-[#588157] font-bold hover:underline"
+          >
+            Cadastre-se!
+          </Link>
+        </p>
       </div>
     </Container>
   );

@@ -58,7 +58,6 @@ export function Register() {
         await login(data.email, data.senha);
         navigate("/dashboard");
       } catch (loginError) {
-        // Se criar mas falhar no login, manda pra tela de login
         toast.error(
           "Erro no login automático. Por favor, entre com sua senha."
         );
@@ -90,7 +89,7 @@ export function Register() {
         </Link>
 
         <form
-          className="bg-white w-full max-w-xl rounded-lg p-6 shadow-md border border-gray-200"
+          className="bg-secundary w-full max-w-xl rounded-lg p-6 shadow-md border border-gray-200"
           onSubmit={handleSubmit(onSubmit)}
         >
           <h2 className="text-2xl font-bold text-center mb-6 text-primary">
@@ -128,7 +127,7 @@ export function Register() {
           <button
             type="submit"
             disabled={isLoading}
-            className="bg-[#588157] hover:bg-buttons w-full rounded-lg text-white h-10 font-bold cursor-pointer mb-4 transition-colors disabled:opacity-50"
+            className="bg-buttons hover:bg-buttonsHover w-full rounded-lg text-white h-10 font-bold cursor-pointer mb-4 transition-colors disabled:opacity-50"
           >
             {isLoading ? "Cadastrando..." : "Cadastrar"}
           </button>
