@@ -130,13 +130,13 @@ export function Home() {
                     | Categoria: {projeto.categoria ?? "-"}
                   </span>
 
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center min-h-[10]">
                     <div className="bg-buttons text-secundary px-2 py-0.5 rounded-full hover:scale-102 transition-all hover:bg-buttonsHover">
                       <Link to={`/project/${projeto.id}`} key={projeto.id}>
                         Ver detalhes
                       </Link>
                     </div>
-                    <strong className="font-medium text-sm text-zinc-600 mr-2">
+                    <strong className="font-medium text-sm text-zinc-600 mr-2 flex-1">
                       Arquiteto(a): {projeto.usuario?.nome || "Não informado"}
                     </strong>
                   </div>

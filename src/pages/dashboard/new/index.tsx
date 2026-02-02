@@ -50,7 +50,7 @@ export function New() {
 
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        console.log("Imagem excede 5MB");
+        toast.error("Imagem excede 5MB");
         return;
       }
       setImageFile(file);
@@ -71,12 +71,12 @@ export function New() {
 
     const validFiles = files.filter((f) => f.size <= maxSize);
     if (validFiles.length !== files.length) {
-      alert("Imagens forma ignoradas, > 5MB");
+      toast.error("Imagens forma ignoradas, > 5MB");
     }
 
     const verQntdDeSlot = MAX_IMAGES - galeriaFiles.length;
     if (verQntdDeSlot <= 0) {
-      alert("Você já atingiu o limite de 10 imagens.");
+      toast.error("Você já atingiu o limite de 10 imagens.");
       e.target.value = "";
       return;
     }
@@ -99,12 +99,12 @@ export function New() {
         e.target.value = "";
         const skipped = validFiles.length - toAdd.length;
         if (skipped > 0)
-          alert(
+          toast.error(
             `Limite de ${MAX_IMAGES} imagens. ${skipped} não foram adicionadas.`,
           );
       })
       .catch(() => {
-        alert("Falha ao ler imagens.");
+        toast.error("Falha ao ler imagens.");
       });
   }
 
@@ -119,9 +119,6 @@ export function New() {
   }
 
   async function onSubmit(data: FormData) {
-    console.log("Dados: ", data);
-    console.log("Imagem da capa: ", imageFile);
-    console.log("Imagens da galeria: ", galeriaFiles);
     setIsSubmitting(true);
     try {
       const formData = new FormData();
@@ -137,15 +134,7 @@ export function New() {
 
       const token = localStorage.getItem("token");
 
-      console.log("=== DADOS ENVIADOS ===");
-      console.log("Token:", token ? "Presente" : "Ausente");
-      console.log("Título:", data.titulo);
-      console.log("Descrição:", data.descricao);
-      console.log("Categoria:", data.categoria);
-      console.log("Capa presente:", !!imageFile);
-      console.log("Qtd imagens galeria:", galeriaFiles.length);
-
-      const create = await api.post("/project", formData, {
+      await api.post("/project", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -154,16 +143,7 @@ export function New() {
 
       toast.success("Projeto cadastrado com sucesso!");
       navigate("/dashboard");
-      console.log(`Projeto: ${create.data}`);
     } catch (err: any) {
-      console.error("=== ERRO DETALHADO ===");
-      console.error("Status:", err.response?.status);
-      console.error(
-        "Data completo:",
-        JSON.stringify(err.response?.data, null, 2),
-      );
-      console.error("Headers:", err.response?.headers);
-
       const errorMessage =
         err.response?.data?.message ||
         err.response?.data?.error ||
@@ -335,7 +315,7 @@ export function New() {
 
         <Button
           type="submit"
-          className="w-full text-2xl font-medium bg-[#588157]! enabled:hover:bg-buttons! border-none cursor-pointer"
+          className="w-full text-2xl font-medium bg-buttons enabled:hover:bg-buttonsHover border-none cursor-pointer"
           disabled={isSubmitting}
         >
           {isSubmitting ? "Cadastrando..." : "Cadastrar Projeto"}
