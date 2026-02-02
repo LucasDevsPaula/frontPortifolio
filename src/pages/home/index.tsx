@@ -130,7 +130,7 @@ export function Home() {
                     | Categoria: {projeto.categoria ?? "-"}
                   </span>
 
-                  <div className="flex justify-between items-center min-h-[10]">
+                  <div className="flex justify-between items-center gap-4 truncate">
                     <div className="bg-buttons text-secundary px-2 py-0.5 rounded-full hover:scale-102 transition-all hover:bg-buttonsHover">
                       <Link to={`/project/${projeto.id}`} key={projeto.id}>
                         Ver detalhes

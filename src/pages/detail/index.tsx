@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent, useContext } from "react";
 import {
   Button,
   Card,
@@ -24,6 +24,7 @@ import { Link, useParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import toast from "react-hot-toast";
+import { AuthContext } from "../../contexts/AuthContext";
 
 import api from "../../server/api";
 
@@ -37,6 +38,7 @@ interface Projeto {
   prazo?: string;
   ImagemProjeto?: { id: string; url: string }[];
   usuario?: {
+    id: string;
     nome: string;
     email: string;
   };
@@ -44,6 +46,7 @@ interface Projeto {
 
 export default function Detail() {
   const { id } = useParams();
+  const { user } = useContext(AuthContext);
   const [projeto, setProjeto] = useState<Projeto | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -289,11 +292,11 @@ ${mensagem}`;
 
                 <div className="flex gap-3">
                   <Link to={`/dashboard/edit/${projeto.id}`}>
-                    <Button
-                      className=" text-white bg-buttons hover:bg-buttonsHover transition-all cursor-pointer"
-                    >
-                      <Edit3 size={18} className="mr-2" /> Editar
-                    </Button>
+                    {user && user.email === projeto.usuario?.email && (
+                      <Button className=" text-white bg-buttons hover:bg-buttonsHover transition-all cursor-pointer">
+                        <Edit3 size={18} className="mr-2" /> Editar
+                      </Button>
+                    )}
                   </Link>
 
                   <Button
