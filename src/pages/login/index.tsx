@@ -121,7 +121,7 @@ export function Login() {
             <span>Entrar com Google</span>
           </button>
         </form>
-       <p className="text-gray-600">
+        <p className="text-gray-600">
           Não possui uma conta?{" "}
           <Link
             to={"/login"}

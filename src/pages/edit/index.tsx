@@ -51,6 +51,8 @@ export default function EditProject() {
 
   const galeriaInputRef = useRef<HTMLInputElement>(null);
 
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   // --- TEMAS VISUAIS ---
   const customCardTheme = {
     root: {
@@ -119,7 +121,7 @@ export default function EditProject() {
 
         if (dados.ImagemProjeto && Array.isArray(dados.ImagemProjeto)) {
           const imagensDoBanco = dados.ImagemProjeto.map((img: any) => ({
-            url: `http://localhost:3333/files/${img.url}`,
+            url: `${apiUrl}/files/${img.url}`,
             id: img.id,
             isNew: false,
             name: img.url.split("/").pop(),

@@ -24,6 +24,7 @@ export function Home() {
   const [projetos, setProjetos] = useState<ProjetoProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3333";
 
   useEffect(() => {
     async function carregarProjetos() {
@@ -73,7 +74,7 @@ export function Home() {
     <>
       <div className="relative">
         <img
-          src="http://localhost:3333/files/36d9fce507e28ee979d8563f0e1b5fcd-ex6.jpeg"
+          src={`${apiUrl}/files/36d9fce507e28ee979d8563f0e1b5fcd-ex6.jpeg`}
           alt="Projeto"
           className="w-full max-h-64 object-cover"
         />

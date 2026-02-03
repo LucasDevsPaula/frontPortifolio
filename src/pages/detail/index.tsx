@@ -57,6 +57,8 @@ export default function Detail() {
   const [telCliente, setTelCliente] = useState("");
   const [mensagem, setMensagem] = useState("");
 
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   useEffect(() => {
     async function loadProject() {
       try {
@@ -184,7 +186,7 @@ ${mensagem}`;
                 {projeto.ImagemProjeto?.map((item) => (
                   <div key={item.id} className="relative h-96 w-full">
                     <img
-                      src={`http://localhost:3333/files/${item.url}`}
+                      src={`${apiUrl}/files/${item.url}`}
                       alt="Imagem do projeto"
                       className="w-full h-full object-cover"
                     />
@@ -262,13 +264,13 @@ ${mensagem}`;
                       return (
                         <a
                           key={file.id}
-                          href={`http://localhost:3333/files/${file.url}`}
+                          href={`${apiUrl}/files/${file.url}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="group relative h-32 rounded-xl overflow-hidden hover:shadow-lg transition-all flex flex-col items-center justify-center bg-inputs border border-detalhes/20 text-center p-2 text-decoration-none"
                         >
                           <img
-                            src={`http://localhost:3333/files/${file.url}`}
+                            src={`${apiUrl}/files/${file.url}`}
                             alt="Galeria"
                             className="w-full h-full rounded-xl object-cover group-hover:scale-110 transition-transform duration-500"
                           />

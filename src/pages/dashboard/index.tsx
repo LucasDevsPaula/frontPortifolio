@@ -39,6 +39,8 @@ export default function Dashboard() {
     nome: string;
   } | null>(null);
 
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   const customInputTheme = {
     field: {
       icon: {
@@ -114,7 +116,7 @@ export default function Dashboard() {
     if (fileName && !fileName.includes("placeholder")) {
       const fullUrl = fileName.startsWith("http")
         ? fileName
-        : `http://localhost:3333/files/${fileName}`;
+        : `${apiUrl}/files/${fileName}`;
 
       return (
         <img
