@@ -5,6 +5,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 import { Container } from "../../components/container";
 import api from "../../server/api";
+import bgImage from "../../assets/poojan-thanekar-vFNPi8WwS2k-unsplash.jpg";
 
 interface UsuarioProps {
   id: string;
@@ -74,7 +75,7 @@ export function Home() {
     <>
       <div className="relative">
         <img
-          src="../../assets/poojan-thanekar-vFNPi8WwS2k-unsplash.jpg"
+          src={bgImage}
           alt="Projeto"
           className="w-full max-h-64 object-cover"
         />
