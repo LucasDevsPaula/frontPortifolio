@@ -74,7 +74,7 @@ export function Home() {
     <>
       <div className="relative">
         <img
-          src="https://images.unsplash.com/photo-1518005052357-e9305583803d?q=80&w=1920&auto=format&fit=crop"
+          src="../../assets/poojan-thanekar-vFNPi8WwS2k-unsplash.jpg"
           alt="Projeto"
           className="w-full max-h-64 object-cover"
         />
