@@ -74,7 +74,7 @@ export function Home() {
     <>
       <div className="relative">
         <img
-          src={`${apiUrl}/files/36d9fce507e28ee979d8563f0e1b5fcd-ex6.jpeg`}
+          src="https://images.unsplash.com/photo-1518005052357-e9305583803d?q=80&w=1920&auto=format&fit=crop"
           alt="Projeto"
           className="w-full max-h-64 object-cover"
         />
