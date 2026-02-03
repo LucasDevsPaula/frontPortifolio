@@ -115,7 +115,7 @@ export function Home() {
               <section className="w-full bg-secundary rounded-lg shadow-sm hover:shadow-md transition-shadow">
                 <img
                   className="w-full rounded-t-lg mb-2 h-56 object-cover hover:scale-102 transition-all"
-                  src={`http://localhost:3333/files/${projeto.imagemCapa}`}
+                  src={`${apiUrl}/files/${projeto.imagemCapa}`}
                   alt={projeto.titulo}
                 />
 
