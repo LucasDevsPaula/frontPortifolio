@@ -7,9 +7,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AuthContext } from "../../contexts/AuthContext";
-import api from "../../server/api"; 
+import api from "../../server/api";
 import { useContext, useState } from "react";
-import toast from "react-hot-toast"; 
+import toast from "react-hot-toast";
 
 const schema = z.object({
   nome: z
@@ -59,7 +59,7 @@ export function Register() {
         navigate("/dashboard");
       } catch (loginError) {
         toast.error(
-          "Erro no login automático. Por favor, entre com sua senha."
+          "Erro no login automático. Por favor, entre com sua senha.",
         );
         navigate("/login");
       }
@@ -74,7 +74,8 @@ export function Register() {
   }
 
   function handleGoogleLogin() {
-    window.location.href = "http://localhost:3333/auth/google";
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3333";
+    window.location.href = `${apiUrl}/auth/google`;
   }
 
   return (
