@@ -124,7 +124,7 @@ export function Login() {
         <p className="text-gray-600">
           Não possui uma conta?{" "}
           <Link
-            to={"/login"}
+            to={"/register"}
             className="text-[#588157] font-bold hover:underline"
           >
             Cadastre-se!
