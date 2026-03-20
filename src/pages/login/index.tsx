@@ -53,8 +53,11 @@ export function Login() {
       toast.success("Bem-vindo!");
       navigate("/dashboard");
     } catch (error) {
-      console.log("ERRO: ", error);
-      toast.error("Email/Senha incorreto!");
+      const err: any = error;
+      const msg =
+        err?.response?.data?.error || err?.message || "Email/Senha incorreto!";
+      console.log("ERRO: ", err);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }

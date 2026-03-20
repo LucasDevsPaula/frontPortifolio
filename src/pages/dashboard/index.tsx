@@ -1,6 +1,15 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { Button, Badge, TextInput, Pagination } from "flowbite-react";
-import { Plus, Search, Calendar, Edit3, Trash2, ImageIcon } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Calendar,
+  Edit3,
+  Trash2,
+  ImageIcon,
+  Link as LinkIcon,
+  Upload,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -30,6 +39,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const { user, refreshUser } = useContext(AuthContext);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const photoInputRef = useRef<HTMLInputElement | null>(null);
 
   // --- ESTADOS DA BUSCA ---
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,6 +59,8 @@ export default function Dashboard() {
       : `${apiUrl}/files/${user.fotoPerfil}`
     : null;
 
+  const canEditProfilePhoto = !!user && !user.isGoogleUser;
+
   const handleUpdateProfilePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -58,9 +70,13 @@ export default function Dashboard() {
       const formData = new FormData();
       formData.append("fotoPerfil", file);
 
-      await api.put("/me/photo", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const token = localStorage.getItem("token");
+
+      await api.put(
+        "/me/photo",
+        formData,
+        token ? { headers: { Authorization: `Bearer ${token}` } } : undefined,
+      );
 
       toast.success("Foto de perfil atualizada!");
       await refreshUser();
@@ -71,6 +87,17 @@ export default function Dashboard() {
     } finally {
       setIsUploadingPhoto(false);
       e.target.value = "";
+    }
+  };
+
+  const handleCopyPortfolioLink = async () => {
+    if (!user?.id) return;
+    const url = `${window.location.origin}/portfolio/${user.id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copiado!");
+    } catch {
+      toast.error("Não foi possível copiar o link");
     }
   };
 
@@ -171,36 +198,49 @@ export default function Dashboard() {
       <div className="w-full max-h-72 bg-inputs flex flex-col justify-center pl-10">
         <Container>
           <div className="mt-9 flex items-center gap-4">
-            {avatarUrl && (
-              <img
-                src={avatarUrl}
-                alt={`Foto de perfil de ${user?.nome || "usuário"}`}
-                className="h-12 w-12 rounded-full object-cover border border-gray-200 shadow-sm"
-                referrerPolicy="no-referrer"
-              />
-            )}
+            <div className={canEditProfilePhoto ? "relative group" : "relative"}>
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={`Foto de perfil de ${user?.nome || "usuário"}`}
+                  className="h-12 w-12 rounded-full object-cover border border-gray-200 shadow-sm"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <div className="h-12 w-12 rounded-full bg-secundary border border-gray-200 shadow-sm" />
+              )}
+
+              {canEditProfilePhoto && (
+                <>
+                  <input
+                    ref={photoInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleUpdateProfilePhoto}
+                    disabled={isUploadingPhoto}
+                    className="hidden"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => photoInputRef.current?.click()}
+                    disabled={isUploadingPhoto}
+                    title="Alterar foto de perfil"
+                    className="absolute inset-0 rounded-full flex items-center justify-center bg-black/0 opacity-0 pointer-events-none group-hover:pointer-events-auto group-hover:opacity-100 group-hover:bg-black/30 transition-all disabled:opacity-0"
+                  >
+                    <Upload
+                      size={18}
+                      className="text-white opacity-80 group-hover:opacity-100 transition-opacity"
+                    />
+                  </button>
+                </>
+              )}
+            </div>
             <h1 className="text-5xl font-serif">Bem vindo(a), {user?.nome}</h1>
           </div>
           <p className="mt-2 text-xl font-serif">
             Gerencie seu portifólio de projetos
           </p>
-
-          {!user?.isGoogleUser && (
-            <div className="mt-4">
-              <label className="inline-flex items-center gap-3 cursor-pointer">
-                <span className="text-sm font-medium text-gray-900">
-                  {isUploadingPhoto ? "Atualizando foto..." : "Alterar foto de perfil"}
-                </span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleUpdateProfilePhoto}
-                  disabled={isUploadingPhoto}
-                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white focus:outline-none disabled:opacity-50"
-                />
-              </label>
-            </div>
-          )}
         </Container>
       </div>
       <Container>
@@ -215,11 +255,22 @@ export default function Dashboard() {
                 : "projetos encontrados"}
             </p>
           </div>
-          <Link to="/dashboard/new">
-            <Button className="bg-buttons hover:bg-buttonsHover cursor-pointer transition-all border-none shadow-md font-bold">
-              <Plus className="mr-2 h-5 w-5" /> Adicionar projeto
+          <div className="flex items-center gap-3">
+            <Link to="/dashboard/new">
+              <Button className="bg-buttons hover:bg-buttonsHover cursor-pointer transition-all border-none shadow-md font-bold">
+                <Plus className="mr-2 h-5 w-5" /> Adicionar projeto
+              </Button>
+            </Link>
+
+            <Button
+              type="button"
+              onClick={handleCopyPortfolioLink}
+              className="!bg-[#936049] hover:!bg-[#936039] opacity-90 hover:opacity-100 cursor-pointer transition-all border-none shadow-md font-bold"
+              title="Copiar link do seu portifólio"
+            >
+              <LinkIcon className="mr-2 h-5 w-5" /> Copiar link
             </Button>
-          </Link>
+          </div>
         </div>
 
         {/* CAMPO DE BUSCA */}

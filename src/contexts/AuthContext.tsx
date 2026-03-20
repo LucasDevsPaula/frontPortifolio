@@ -76,6 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log(token)
 
       localStorage.setItem("token", token);
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
       await refreshUser();
     } catch (err) {
@@ -89,7 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log("Login Google: recebendo token", token);
 
       localStorage.setItem("token", token);
-      api.defaults.headers.Authorization = `Bearer ${token}`;
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
       await refreshUser();
     } catch (err) {
@@ -101,7 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   function logout() {
     localStorage.removeItem("token");
     // Garante que nenhuma requisição futura envie Authorization por padrão
-    api.defaults.headers.Authorization = null;
+    delete api.defaults.headers.common.Authorization;
     setUser(null);
   }
 

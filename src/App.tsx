@@ -6,6 +6,7 @@ import Detail from "./pages/detail";
 import Dashboard from "./pages/dashboard";
 import { New } from "./pages/dashboard/new";
 import Edit from "./pages/edit";
+import { Portfolio } from "./pages/portfolio";
 import { Layout } from "./components/layout";
 import { PrivateRoute } from "./routes/PrivateRoute";
 
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "/project/:id",
         element: <Detail />,
+      },
+      {
+        path: "/portfolio/:userId",
+        element: <Portfolio />,
       },
       {
         path: "/dashboard",

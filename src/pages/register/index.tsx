@@ -65,9 +65,11 @@ export function Register() {
         await login(data.email, data.senha);
         navigate("/dashboard");
       } catch (loginError) {
-        toast.error(
-          "Erro no login automático. Por favor, entre com sua senha.",
-        );
+        const err: any = loginError;
+        const msg =
+          err?.response?.data?.error ||
+          "Erro no login automático. Por favor, entre com sua senha.";
+        toast.error(msg);
         navigate("/login");
       }
     } catch (err: any) {
