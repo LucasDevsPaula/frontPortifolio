@@ -6,7 +6,14 @@ import { AuthContext } from "../../contexts/AuthContext";
 
 export function Header() {
   const navigate = useNavigate();
-  const { signed, logout } = useContext(AuthContext);
+  const { signed, logout, user } = useContext(AuthContext);
+
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3333";
+  const avatarUrl = user?.fotoPerfil
+    ? user.fotoPerfil.startsWith("http")
+      ? user.fotoPerfil
+      : `${apiUrl}/files/${user.fotoPerfil}`
+    : null;
 
   const handleLogout = () => {
     logout();
@@ -22,20 +29,29 @@ export function Header() {
         {signed && (
           <div className="flex items-center gap-4">
             <Link to={"/dashboard"} title="Dashboard">
-              <CircleUserRound size={24} color="#D2BE99"/>
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={`Foto de perfil de ${user?.nome || "usuário"}`}
+                  className="h-9 w-9 rounded-full object-cover border border-[#D2BE99]/60 shadow-sm"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <CircleUserRound size={24} color="#D2BE99" />
+              )}
             </Link>
             <button
               onClick={handleLogout}
               className="text-zinc-900 hover:text-zinc-950 transition-colors cursor-pointer"
               title="Sair"
             >
-              <LogOut size={24} color="#D2BE99"/>
+              <LogOut size={24} color="#D2BE99" />
             </button>
           </div>
         )}
         {!signed && (
           <Link to={"/login"} title="Entrar">
-            <LogIn size={24} color="#D2BE99"/>
+            <LogIn size={24} color="#D2BE99" />
           </Link>
         )}
       </header>

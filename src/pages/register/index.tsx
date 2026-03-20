@@ -24,6 +24,9 @@ const schema = z.object({
     .string()
     .min(1, "O campo senha é obrigatório")
     .min(4, "A senha deve ter mais de 4 caracteres"),
+  fotoPerfil: z
+    .any()
+    .refine((files) => files?.length === 1, "A foto de perfil é obrigatória"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -46,10 +49,14 @@ export function Register() {
     console.log(data);
     setIsLoading(true);
     try {
-      await api.post("/users", {
-        nome: data.nome,
-        email: data.email,
-        senha: data.senha,
+      const formData = new FormData();
+      formData.append("nome", data.nome);
+      formData.append("email", data.email);
+      formData.append("senha", data.senha);
+      formData.append("fotoPerfil", data.fotoPerfil[0]);
+
+      await api.post("/users", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       toast.success("Conta criada com sucesso!");
@@ -123,6 +130,23 @@ export function Register() {
               error={errors.senha?.message}
               register={register}
             />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-primary mb-1">
+              Foto de perfil
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              {...register("fotoPerfil")}
+              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white focus:outline-none"
+            />
+            {errors.fotoPerfil?.message && (
+              <p className="text-red-600 text-sm mt-1">
+                {String(errors.fotoPerfil.message)}
+              </p>
+            )}
           </div>
 
           <button

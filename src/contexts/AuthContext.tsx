@@ -5,6 +5,8 @@ interface User {
   id: string;
   nome: string;
   email: string;
+  fotoPerfil?: string;
+  isGoogleUser?: boolean;
 }
 
 interface LoginResponse {
@@ -20,6 +22,7 @@ interface AuthContextData {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   loginWithGoogle: (token: string) => Promise<void>;
+  refreshUser: () => Promise<void>;
   logout: () => void;
 }
 
@@ -31,6 +34,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  async function refreshUser() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setUser(null);
+      return;
+    }
+
+    const profile = await api.get<User>("/me");
+    setUser(profile.data);
+  }
+
   useEffect(() => {
     async function loadUser() {
       const token = localStorage.getItem("token");
@@ -41,8 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const res = await api.get<User>("/me");
-        setUser(res.data);
+        await refreshUser();
       } catch (err) {
         console.log("Token inválido ou expirado", err);
         logout();
@@ -63,8 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       localStorage.setItem("token", token);
 
-      const profile = await api.get<User>("/me");
-      setUser(profile.data);
+      await refreshUser();
     } catch (err) {
       console.error("Erro ao fazer login:", err);
       throw err;
@@ -78,8 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("token", token);
       api.defaults.headers.Authorization = `Bearer ${token}`;
 
-      const profile = await api.get<User>("/me");
-      setUser(profile.data);
+      await refreshUser();
     } catch (err) {
       console.log("Erro ao carregar usuário do google: ", err);
       logout();
@@ -95,7 +107,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, signed: !!user, loading, login, loginWithGoogle, logout }}
+      value={{
+        user,
+        signed: !!user,
+        loading,
+        login,
+        loginWithGoogle,
+        refreshUser,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

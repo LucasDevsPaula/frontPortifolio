@@ -9,6 +9,7 @@ import { Container } from "../../components/container";
 import api from "../../server/api";
 import { DeleteProjectModal } from "../../components/delete/DeletarProjeto";
 import { AuthContext } from "../../contexts/AuthContext";
+import toast from "react-hot-toast";
 
 interface UsuarioProps {
   id: string;
@@ -27,7 +28,8 @@ interface ProjetoProps {
 export default function Dashboard() {
   const [projetos, setProjetos] = useState<ProjetoProps[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useContext(AuthContext);
+  const { user, refreshUser } = useContext(AuthContext);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
   // --- ESTADOS DA BUSCA ---
   const [searchTerm, setSearchTerm] = useState("");
@@ -40,6 +42,37 @@ export default function Dashboard() {
   } | null>(null);
 
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+  const avatarUrl = user?.fotoPerfil
+    ? user.fotoPerfil.startsWith("http")
+      ? user.fotoPerfil
+      : `${apiUrl}/files/${user.fotoPerfil}`
+    : null;
+
+  const handleUpdateProfilePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingPhoto(true);
+    try {
+      const formData = new FormData();
+      formData.append("fotoPerfil", file);
+
+      await api.put("/me/photo", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      toast.success("Foto de perfil atualizada!");
+      await refreshUser();
+    } catch (err: any) {
+      const msg =
+        err?.response?.data?.error || "Erro ao atualizar foto de perfil";
+      toast.error(msg);
+    } finally {
+      setIsUploadingPhoto(false);
+      e.target.value = "";
+    }
+  };
 
   const customInputTheme = {
     field: {
@@ -137,10 +170,37 @@ export default function Dashboard() {
     <>
       <div className="w-full max-h-72 bg-inputs flex flex-col justify-center pl-10">
         <Container>
-          <h1 className="mt-9 text-5xl font-serif">Bem vindo(a), {user?.nome}</h1>
+          <div className="mt-9 flex items-center gap-4">
+            {avatarUrl && (
+              <img
+                src={avatarUrl}
+                alt={`Foto de perfil de ${user?.nome || "usuário"}`}
+                className="h-12 w-12 rounded-full object-cover border border-gray-200 shadow-sm"
+                referrerPolicy="no-referrer"
+              />
+            )}
+            <h1 className="text-5xl font-serif">Bem vindo(a), {user?.nome}</h1>
+          </div>
           <p className="mt-2 text-xl font-serif">
             Gerencie seu portifólio de projetos
           </p>
+
+          {!user?.isGoogleUser && (
+            <div className="mt-4">
+              <label className="inline-flex items-center gap-3 cursor-pointer">
+                <span className="text-sm font-medium text-gray-900">
+                  {isUploadingPhoto ? "Atualizando foto..." : "Alterar foto de perfil"}
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUpdateProfilePhoto}
+                  disabled={isUploadingPhoto}
+                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white focus:outline-none disabled:opacity-50"
+                />
+              </label>
+            </div>
+          )}
         </Container>
       </div>
       <Container>
