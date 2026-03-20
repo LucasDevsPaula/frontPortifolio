@@ -51,7 +51,7 @@ export default function EditProject() {
 
   const galeriaInputRef = useRef<HTMLInputElement>(null);
 
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3333";
 
   // --- TEMAS VISUAIS ---
   const customCardTheme = {

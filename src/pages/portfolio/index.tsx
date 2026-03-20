@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { CircleUserRound } from "lucide-react";
 import "react-loading-skeleton/dist/skeleton.css";
 
 import { Container } from "../../components/container";
@@ -42,7 +43,7 @@ export function Portfolio() {
         const res = await api.get(`/portfolio/${userId}`);
         setUsuario(res.data.usuario);
         setProjetos(res.data.projetos || []);
-      } catch (err) {
+      } catch {
         setUsuario(null);
         setProjetos([]);
       } finally {
@@ -66,16 +67,18 @@ export function Portfolio() {
 
         <div className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 w-[92%] max-w-4xl">
           <div className="bg-[#dad7cd] rounded-xl shadow-[0px_10px_11px_rgba(168,157,157,0.56)] px-6 py-5 flex items-center gap-4">
-            {avatarUrl ? (
-              <img
-                src={avatarUrl}
-                alt={`Foto de perfil de ${usuario?.nome || "usuário"}`}
-                className="h-14 w-14 rounded-full object-cover border border-gray-200 shadow-sm"
-                referrerPolicy="no-referrer"
-              />
-            ) : (
-              <div className="h-14 w-14 rounded-full bg-inputs border border-gray-200" />
-            )}
+            <div className="h-14 w-14 shrink-0 rounded-full overflow-hidden bg-inputs border border-gray-200 shadow-sm flex items-center justify-center">
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={`Foto de perfil de ${usuario?.nome || "usuário"}`}
+                  className="h-full w-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <CircleUserRound size={26} className="text-detalhes" />
+              )}
+            </div>
 
             <div className="min-w-0">
               <p className="text-sm text-zinc-700">Portifólio</p>
@@ -129,7 +132,26 @@ export function Portfolio() {
 
                   <div className="flex justify-between items-center gap-4 truncate">
                     <div className="bg-buttons text-secundary px-2 py-0.5 rounded-full hover:scale-102 transition-all hover:bg-buttonsHover">
-                      <Link to={`/project/${projeto.id}`} key={projeto.id}>
+                      <Link
+                        to={
+                          userId
+                            ? {
+                                pathname: `/project/${projeto.id}`,
+                                search: `?from=portfolio&back=${encodeURIComponent(
+                                  `/portfolio/${userId}`
+                                )}`,
+                              }
+                            : `/project/${projeto.id}`
+                        }
+                        state={
+                          userId
+                            ? {
+                                from: "portfolio",
+                                backTo: `/portfolio/${userId}`,
+                              }
+                            : undefined
+                        }
+                      >
                         Ver detalhes
                       </Link>
                     </div>

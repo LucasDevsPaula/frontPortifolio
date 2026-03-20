@@ -40,8 +40,7 @@ export function Home() {
         }
         setProjetos(dados);
       } catch (err) {
-        console.log("Erro ao carregar", err);
-      } finally {
+        } finally {
         setLoading(false);
       }
     }

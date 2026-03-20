@@ -35,7 +35,6 @@ export const DeleteProjectModal = ({
       onSuccess();
       onClose();
     } catch (error) {
-      console.error(error);
       toast.error("Erro ao excluir projeto.");
     } finally {
       setIsDeleting(false);

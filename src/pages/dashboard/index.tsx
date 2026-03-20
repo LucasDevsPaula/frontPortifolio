@@ -9,6 +9,7 @@ import {
   ImageIcon,
   Link as LinkIcon,
   Upload,
+  CircleUserRound,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
@@ -51,7 +52,7 @@ export default function Dashboard() {
     nome: string;
   } | null>(null);
 
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3333";
 
   const avatarUrl = user?.fotoPerfil
     ? user.fotoPerfil.startsWith("http")
@@ -120,10 +121,8 @@ export default function Dashboard() {
       try {
         const res = await api.get("/project");
         setProjetos(res.data.projetos);
-        console.log(res.data.projetos);
         setLoading(true);
       } catch (err) {
-        console.error("Erro ao buscar projetos:", err);
         setProjetos([]);
       } finally {
         setLoading(false);
@@ -198,16 +197,22 @@ export default function Dashboard() {
       <div className="w-full max-h-72 bg-inputs flex flex-col justify-center pl-10">
         <Container>
           <div className="mt-9 flex items-center gap-4">
-            <div className={canEditProfilePhoto ? "relative group" : "relative"}>
+            <div
+              className={
+                canEditProfilePhoto
+                  ? "relative group h-12 w-12 shrink-0 rounded-full overflow-hidden border border-gray-200 shadow-sm flex items-center justify-center bg-secundary"
+                  : "relative h-12 w-12 shrink-0 rounded-full overflow-hidden border border-gray-200 shadow-sm flex items-center justify-center bg-secundary"
+              }
+            >
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
                   alt={`Foto de perfil de ${user?.nome || "usuário"}`}
-                  className="h-12 w-12 rounded-full object-cover border border-gray-200 shadow-sm"
+                  className="h-full w-full object-cover"
                   referrerPolicy="no-referrer"
                 />
               ) : (
-                <div className="h-12 w-12 rounded-full bg-secundary border border-gray-200 shadow-sm" />
+                <CircleUserRound size={22} className="text-detalhes" />
               )}
 
               {canEditProfilePhoto && (
@@ -236,7 +241,9 @@ export default function Dashboard() {
                 </>
               )}
             </div>
-            <h1 className="text-5xl font-serif">Bem vindo(a), {user?.nome}</h1>
+            <h1 className="text-5xl font-serif min-w-0 truncate">
+              Bem vindo(a), {user?.nome}
+            </h1>
           </div>
           <p className="mt-2 text-xl font-serif">
             Gerencie seu portifólio de projetos

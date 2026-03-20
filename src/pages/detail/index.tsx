@@ -20,7 +20,7 @@ import {
   Send,
   X,
 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import toast from "react-hot-toast";
@@ -47,6 +47,8 @@ interface Projeto {
 export default function Detail() {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [projeto, setProjeto] = useState<Projeto | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -57,7 +59,40 @@ export default function Detail() {
   const [telCliente, setTelCliente] = useState("");
   const [mensagem, setMensagem] = useState("");
 
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3333";
+
+  const state = location.state as null | {
+    from?: string;
+    backTo?: string;
+  };
+
+  const isSafeBackPath = (path: string | null) => {
+    if (!path) return false;
+    if (!path.startsWith("/")) return false;
+    // Avoid open redirects (only allow returning to portfolio pages)
+    if (!path.startsWith("/portfolio/")) return false;
+    return true;
+  };
+
+  const backToFromQuery = (() => {
+    const back = searchParams.get("back");
+    if (!back) return null;
+    try {
+      const decoded = decodeURIComponent(back);
+      return decoded;
+    } catch {
+      return null;
+    }
+  })();
+
+  const backTo =
+    (isSafeBackPath(state?.backTo || null) ? state?.backTo : null) ||
+    (isSafeBackPath(backToFromQuery) ? backToFromQuery : null) ||
+    "/";
+
+  const backLabel = backTo.startsWith("/portfolio/")
+    ? "Voltar para o Portifólio"
+    : "Voltar para a Home";
 
   useEffect(() => {
     async function loadProject() {
@@ -65,7 +100,6 @@ export default function Detail() {
         const response = await api.get(`/project/${id}`);
         setProjeto(response.data);
       } catch (error) {
-        console.error("Erro ao carregar", error);
       } finally {
         setLoading(false);
       }
@@ -169,12 +203,12 @@ ${mensagem}`;
       <div className="w-full max-w-5xl">
         <div className="flex items-center gap-4 mb-6 mt-4">
           <Link
-            to="/"
+            to={backTo}
             className="bg-secundary p-2 rounded-full hover:bg-inputs transition-all"
           >
             <ArrowLeft size={20} className="text-zinc-900" />
           </Link>
-          <h1 className="text-2xl font-bold">Voltar para a Home</h1>
+          <h1 className="text-2xl font-bold">{backLabel}</h1>
         </div>
 
         {loading ? (

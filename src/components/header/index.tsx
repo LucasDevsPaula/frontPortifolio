@@ -29,16 +29,18 @@ export function Header() {
         {signed && (
           <div className="flex items-center gap-4">
             <Link to={"/dashboard"} title="Dashboard">
-              {avatarUrl ? (
-                <img
-                  src={avatarUrl}
-                  alt={`Foto de perfil de ${user?.nome || "usuário"}`}
-                  className="h-9 w-9 rounded-full object-cover border border-[#D2BE99]/60 shadow-sm"
-                  referrerPolicy="no-referrer"
-                />
-              ) : (
-                <CircleUserRound size={24} color="#D2BE99" />
-              )}
+              <div className="h-9 w-9 shrink-0 rounded-full overflow-hidden border border-[#D2BE99]/60 shadow-sm flex items-center justify-center bg-secundary/10">
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt={`Foto de perfil de ${user?.nome || "usuário"}`}
+                    className="h-full w-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <CircleUserRound size={20} color="#D2BE99" />
+                )}
+              </div>
             </Link>
             <button
               onClick={handleLogout}

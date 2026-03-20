@@ -58,7 +58,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         await refreshUser();
       } catch (err) {
-        console.log("Token inválido ou expirado", err);
         logout();
       } finally {
         setLoading(false);
@@ -70,31 +69,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function login(email: string, senha: string) {
     try {
       const res = await api.post<LoginResponse>("/session", { email, senha });
-      console.log("Resposta do login: ", res.data);
 
       const { token } = res.data;
-      console.log(token)
 
       localStorage.setItem("token", token);
       api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
       await refreshUser();
     } catch (err) {
-      console.error("Erro ao fazer login:", err);
       throw err;
     }
   }
 
   async function loginWithGoogle(token: string) {
     try {
-      console.log("Login Google: recebendo token", token);
-
       localStorage.setItem("token", token);
       api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
       await refreshUser();
     } catch (err) {
-      console.log("Erro ao carregar usuário do google: ", err);
       logout();
     }
   }

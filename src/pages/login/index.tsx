@@ -56,7 +56,6 @@ export function Login() {
       const err: any = error;
       const msg =
         err?.response?.data?.error || err?.message || "Email/Senha incorreto!";
-      console.log("ERRO: ", err);
       toast.error(msg);
     } finally {
       setIsLoading(false);

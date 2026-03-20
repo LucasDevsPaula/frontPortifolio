@@ -46,7 +46,6 @@ export function Register() {
   });
 
   async function onSubmit(data: FormData) {
-    console.log(data);
     setIsLoading(true);
     try {
       const formData = new FormData();
@@ -73,7 +72,6 @@ export function Register() {
         navigate("/login");
       }
     } catch (err: any) {
-      console.log(err);
       const msg =
         err.response?.data?.error || "Erro ao cadastrar. Verifique os dados.";
       toast.error(msg);
