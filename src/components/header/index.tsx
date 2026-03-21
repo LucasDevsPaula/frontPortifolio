@@ -8,12 +8,7 @@ export function Header() {
   const navigate = useNavigate();
   const { signed, logout, user } = useContext(AuthContext);
 
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3333";
-  const avatarUrl = user?.fotoPerfil
-    ? user.fotoPerfil.startsWith("http")
-      ? user.fotoPerfil
-      : `${apiUrl}/files/${user.fotoPerfil}`
-    : null;
+  const avatarUrl = user?.fotoPerfil ? user.fotoPerfil : null;
 
   const handleLogout = () => {
     logout();

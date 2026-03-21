@@ -54,11 +54,7 @@ export default function Dashboard() {
 
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3333";
 
-  const avatarUrl = user?.fotoPerfil
-    ? user.fotoPerfil.startsWith("http")
-      ? user.fotoPerfil
-      : `${apiUrl}/files/${user.fotoPerfil}`
-    : null;
+  const avatarUrl = user?.fotoPerfil ? user.fotoPerfil : null;
 
   const canEditProfilePhoto = !!user && !user.isGoogleUser;
 
@@ -173,9 +169,7 @@ export default function Dashboard() {
     fileName = projeto.imagemCapa;
 
     if (fileName && !fileName.includes("placeholder")) {
-      const fullUrl = fileName.startsWith("http")
-        ? fileName
-        : `${apiUrl}/files/${fileName}`;
+      const fullUrl = fileName.startsWith("http") ? fileName : `${apiUrl}/files/${fileName}`;
 
       return (
         <img

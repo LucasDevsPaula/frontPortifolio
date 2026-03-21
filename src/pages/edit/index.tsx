@@ -121,7 +121,7 @@ export default function EditProject() {
 
         if (dados.ImagemProjeto && Array.isArray(dados.ImagemProjeto)) {
           const imagensDoBanco = dados.ImagemProjeto.map((img: any) => ({
-            url: `${apiUrl}/files/${img.url}`,
+            url: (img.url || "").startsWith("http") ? img.url : `${apiUrl}/files/${img.url}`,
             id: img.id,
             isNew: false,
             name: img.url.split("/").pop(),

@@ -114,7 +114,11 @@ export function Portfolio() {
               >
                 <img
                   className="w-full rounded-t-lg mb-2 h-56 object-cover hover:scale-102 transition-all"
-                  src={`${apiUrl}/files/${projeto.imagemCapa}`}
+                  src={
+                    projeto.imagemCapa?.startsWith("http")
+                      ? projeto.imagemCapa
+                      : `${apiUrl}/files/${projeto.imagemCapa}`
+                  }
                   alt={projeto.titulo}
                 />
 

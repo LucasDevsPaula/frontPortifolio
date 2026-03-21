@@ -220,7 +220,11 @@ ${mensagem}`;
                 {projeto.ImagemProjeto?.map((item) => (
                   <div key={item.id} className="relative h-96 w-full">
                     <img
-                      src={`${apiUrl}/files/${item.url}`}
+                      src={
+                        item.url?.startsWith("http")
+                          ? item.url
+                          : `${apiUrl}/files/${item.url}`
+                      }
                       alt="Imagem do projeto"
                       className="w-full h-full object-cover"
                     />
@@ -298,13 +302,21 @@ ${mensagem}`;
                       return (
                         <a
                           key={file.id}
-                          href={`${apiUrl}/files/${file.url}`}
+                          href={
+                            file.url?.startsWith("http")
+                              ? file.url
+                              : `${apiUrl}/files/${file.url}`
+                          }
                           target="_blank"
                           rel="noopener noreferrer"
                           className="group relative h-32 rounded-xl overflow-hidden hover:shadow-lg transition-all flex flex-col items-center justify-center bg-inputs border border-detalhes/20 text-center p-2 text-decoration-none"
                         >
                           <img
-                            src={`${apiUrl}/files/${file.url}`}
+                            src={
+                              file.url?.startsWith("http")
+                                ? file.url
+                                : `${apiUrl}/files/${file.url}`
+                            }
                             alt="Galeria"
                             className="w-full h-full rounded-xl object-cover group-hover:scale-110 transition-transform duration-500"
                           />
